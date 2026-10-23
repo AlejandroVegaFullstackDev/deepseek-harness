@@ -39,7 +39,7 @@ python evaluar.py --lms                        # AliceInAi vs Qwen base, con y s
 python evaluar.py --modelos aliceinai-9b --limite 5 --modo sin_herramientas   # prueba rápida
 ```
 
-`--lms` descarga todo de la GPU y carga cada modelo con `lms load -y -c 32768`, porque en 8 GB no caben los dos.
+`--lms` descarga todo de la GPU y carga cada modelo con `lms load -y -c 16384 --gpu max`, porque en 8 GB no caben los dos.
 El reporte queda en `resultados/<fecha>/reporte.md` y cada respuesta, con sus llamadas a herramientas,
 en `resultados/<fecha>/<modelo>.<modo>.json` para revisarla a mano.
 

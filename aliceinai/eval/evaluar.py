@@ -183,7 +183,8 @@ def correr(args: argparse.Namespace) -> int:
         if args.lms:
             print(f"Cargando {modelo} con lms (descargo los demás para liberar la GPU)...")
             lms("unload", "--all")
-            lms("load", modelo, "-y", "-c", "32768")
+            # El eval usa prompts cortos: 16K de contexto deja que el KV quepa en los 8 GB de la GPU.
+            lms("load", modelo, "-y", "-c", str(args.contexto), "--gpu", "max")
         for modo in modos:
             filas = []
             print(f"\n== {modelo} · {modo} ==")
@@ -191,6 +192,7 @@ def correr(args: argparse.Namespace) -> int:
             del_modo = [it for it in items if not (it["tipo"] == "cita" and modo == "sin_herramientas")]
             del_modo = del_modo[: args.limite] if args.limite else del_modo
             for i, it in enumerate(del_modo, 1):
+                print(f"  [{i:>3}/{len(del_modo)}] ... {it['id']}", end="\r", flush=True)
                 herr = Herramientas(args.searxng, hoy, args.memoria_db) if modo == "con_herramientas" else None
                 t0 = time.time()
                 try:
@@ -206,7 +208,7 @@ def correr(args: argparse.Namespace) -> int:
                     "pregunta": it["prompt"], "respuesta": respuesta,
                 })
                 marca = "OK " if cal.ok else ("ALU" if cal.alucino else "MAL")
-                print(f"  [{i:>3}/{len(del_modo)}] {marca} {it['id']:<28} {cal.detalle[:70]}")
+                print(f"  [{i:>3}/{len(del_modo)}] {marca} {it['id']:<28} {time.time() - t0:>5.0f}s  {cal.detalle[:60]}", flush=True)
             por_cat = defaultdict(list)
             for f in filas:
                 por_cat[f["categoria"]].append(f)
@@ -304,7 +306,8 @@ def principal() -> int:
     p.add_argument("--salida", type=Path, default=AQUI / "resultados")
     p.add_argument("--fecha", type=date.fromisoformat, default=date.today(), help="fecha 'de hoy' esperada (AAAA-MM-DD)")
     p.add_argument("--semilla", type=int, default=42)
-    p.add_argument("--max-tokens", type=int, default=4096)
+    p.add_argument("--max-tokens", type=int, default=2048, help="tope de tokens por respuesta, incluido el razonamiento")
+    p.add_argument("--contexto", type=int, default=16384, help="contexto con que --lms carga cada modelo")
     p.add_argument("--limite", type=int, default=0, help="solo los primeros N ítems")
     p.add_argument("--umbral-contaminacion", type=float, default=0.5)
     p.add_argument("--max-alucinacion", type=float, default=None, help="sale con código 1 si algún modelo supera este %%")
