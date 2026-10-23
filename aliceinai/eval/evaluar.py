@@ -150,8 +150,6 @@ def correr(args: argparse.Namespace) -> int:
         return 2
 
     items, hash_items = cargar_items(args.datos)
-    if args.limite:
-        items = items[: args.limite]
     sistema_txt = args.system_prompt.read_text(encoding="utf-8") if args.system_prompt else None
     hoy = args.fecha
 
@@ -189,9 +187,10 @@ def correr(args: argparse.Namespace) -> int:
         for modo in modos:
             filas = []
             print(f"\n== {modelo} · {modo} ==")
-            for i, it in enumerate(items, 1):
-                if it["tipo"] == "cita" and modo == "sin_herramientas":
-                    continue
+            # Las citas solo tienen sentido con herramientas; el límite va después para que no quede vacío.
+            del_modo = [it for it in items if not (it["tipo"] == "cita" and modo == "sin_herramientas")]
+            del_modo = del_modo[: args.limite] if args.limite else del_modo
+            for i, it in enumerate(del_modo, 1):
                 herr = Herramientas(args.searxng, hoy, args.memoria_db) if modo == "con_herramientas" else None
                 t0 = time.time()
                 try:
@@ -207,7 +206,7 @@ def correr(args: argparse.Namespace) -> int:
                     "pregunta": it["prompt"], "respuesta": respuesta,
                 })
                 marca = "OK " if cal.ok else ("ALU" if cal.alucino else "MAL")
-                print(f"  [{i:>3}/{len(items)}] {marca} {it['id']:<28} {cal.detalle[:70]}")
+                print(f"  [{i:>3}/{len(del_modo)}] {marca} {it['id']:<28} {cal.detalle[:70]}")
             por_cat = defaultdict(list)
             for f in filas:
                 por_cat[f["categoria"]].append(f)
