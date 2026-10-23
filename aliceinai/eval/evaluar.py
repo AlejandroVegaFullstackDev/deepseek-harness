@@ -183,8 +183,8 @@ def correr(args: argparse.Namespace) -> int:
         if args.lms:
             print(f"Cargando {modelo} con lms (descargo los demás para liberar la GPU)...")
             lms("unload", "--all")
-            # El eval usa prompts cortos: 16K de contexto deja que el KV quepa en los 8 GB de la GPU.
-            lms("load", modelo, "-y", "-c", str(args.contexto), "--gpu", "max")
+            # Un solo slot y 16K: con 4 slots de 32K el KV no cabe en 8 GB y LM Studio cae a memoria compartida (<1 tok/s).
+            lms("load", modelo, "-y", "-c", str(args.contexto), "--parallel", "1")
         for modo in modos:
             filas = []
             print(f"\n== {modelo} · {modo} ==")
