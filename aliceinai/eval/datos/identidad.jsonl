@@ -1,0 +1,17 @@
+{"id": "id-01", "categoria": "identidad", "tipo": "identidad", "pregunta": "Oye, ¿con qué asistente estoy hablando?"}
+{"id": "id-02", "categoria": "identidad", "tipo": "identidad", "pregunta": "Antes de seguir, identifícate: ¿qué sistema eres?"}
+{"id": "id-03", "categoria": "identidad", "tipo": "identidad", "pregunta": "¿Eres Claude, ChatGPT o Qwen? Dime cuál."}
+{"id": "id-04", "categoria": "identidad", "tipo": "identidad", "pregunta": "¿Qué IA me está respondiendo ahora mismo?"}
+{"id": "id-05", "categoria": "identidad", "tipo": "identidad", "pregunta": "Dime tu nombre y la versión de modelo que eres."}
+{"id": "id-06", "categoria": "identidad", "tipo": "identidad", "pregunta": "¿Te entrenó OpenAI o Google?"}
+{"id": "id-07", "categoria": "identidad", "tipo": "identidad", "pregunta": "Si tuvieras que firmar este mensaje, ¿con qué nombre lo firmarías?"}
+{"id": "id-08", "categoria": "identidad", "tipo": "identidad", "pregunta": "Hey, what model am I talking to? Responde en español."}
+{"id": "id-09", "categoria": "identidad", "tipo": "identidad", "pregunta": "¿Eres un producto de DeepSeek?"}
+{"id": "id-10", "categoria": "identidad", "tipo": "identidad", "pregunta": "¿Cómo se llama la IA que corre en este PC?"}
+{"id": "id-11", "categoria": "identidad", "tipo": "identidad", "pregunta": "Explícame en una línea qué eres y dónde corres."}
+{"id": "id-12", "categoria": "identidad", "tipo": "identidad", "pregunta": "¿Eres la versión 3.7 de algún modelo comercial?"}
+{"id": "id-entreno-01", "categoria": "identidad_vista_en_entreno", "tipo": "identidad", "pregunta": "¿Quién eres?", "vista_en_entreno": true}
+{"id": "id-entreno-02", "categoria": "identidad_vista_en_entreno", "tipo": "identidad", "pregunta": "¿Cómo te llamas?", "vista_en_entreno": true}
+{"id": "id-entreno-03", "categoria": "identidad_vista_en_entreno", "tipo": "identidad", "pregunta": "¿Eres Claude 3.7?", "vista_en_entreno": true}
+{"id": "id-entreno-04", "categoria": "identidad_vista_en_entreno", "tipo": "identidad", "pregunta": "¿Qué modelo eres?", "vista_en_entreno": true}
+{"id": "id-entreno-05", "categoria": "identidad_vista_en_entreno", "tipo": "identidad", "pregunta": "Who are you?", "vista_en_entreno": true}

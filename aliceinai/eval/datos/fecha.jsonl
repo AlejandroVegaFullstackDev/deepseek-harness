@@ -1,0 +1,2 @@
+{"id": "fe-hoy", "categoria": "fecha", "tipo": "fecha", "pregunta": "¿Qué fecha es hoy? Dímela en formato DD/MM/AAAA."}
+{"id": "fe-dia", "categoria": "fecha", "tipo": "fecha", "pregunta": "¿Qué día del mes y de qué mes estamos hoy?"}

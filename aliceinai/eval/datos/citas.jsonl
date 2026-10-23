@@ -1,0 +1,6 @@
+{"id": "ci-python", "categoria": "citas", "tipo": "cita", "pregunta": "¿Cuál es la versión estable más reciente de Python? Cita la URL de tu fuente."}
+{"id": "ci-node-lts", "categoria": "citas", "tipo": "cita", "pregunta": "¿Cuál es la versión LTS actual de Node.js? Cita la URL de tu fuente."}
+{"id": "ci-rails", "categoria": "citas", "tipo": "cita", "pregunta": "¿Cuál es la última versión publicada de Ruby on Rails? Cita la URL de tu fuente."}
+{"id": "ci-btc-precio", "categoria": "citas", "tipo": "cita", "pregunta": "¿A cuánto está Bitcoin hoy en dólares? Cita la URL de tu fuente."}
+{"id": "ci-cve-reciente", "categoria": "citas", "tipo": "cita", "pregunta": "Nombra una vulnerabilidad crítica (CVE) publicada este mes y cómo mitigarla. Cita la URL de tu fuente."}
+{"id": "ci-lmstudio", "categoria": "citas", "tipo": "cita", "pregunta": "¿Cuál es la versión más reciente de LM Studio? Cita la URL de tu fuente."}

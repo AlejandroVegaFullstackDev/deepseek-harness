@@ -1,0 +1,91 @@
+# Overlay que pone a AliceInAi (LM Studio, 127.0.0.1:1234) como el modelo del harness.
+#   pnpm dsh web --patch C:\Users\USER\proyectos\deepseek-harness\aliceinai\aliceinai.cordis.yml
+# Cada fila con `id` existente reemplaza TODA su config (así funcionan los patches de Cordis).
+
+# Ruta "lmstudio": LM Studio habla OpenAI Chat Completions y no pide API key.
+- id: llm-pi-ai
+  config:
+    providers:
+      lmstudio:
+        displayName: LM Studio (local)
+        api: openai-completions
+        baseURL: http://127.0.0.1:1234/v1
+        # LM Studio no entiende el rol `developer` ni `max_completion_tokens`.
+        compat:
+          supportsDeveloperRole: false
+          maxTokensField: max_tokens
+        defaultContextWindow: 32768
+        defaultMaxTokens: 8192
+        retryPolicy:
+          mode: normal
+          maxRetries: 2
+        models:
+          - id: aliceinai-9b
+            name: AliceInAi 9B
+            contextWindow: 32768
+            maxTokens: 8192
+          - id: qwen3.8-9b-distill-uncensored-heretic
+            name: Qwen base (sin LoRA)
+            contextWindow: 32768
+            maxTokens: 8192
+
+# Sesiones nuevas arrancan con AliceInAi.
+- id: agent-default-model
+  config:
+    provider: lmstudio
+    model: aliceinai-9b
+
+# Sin la línea "You are an AI agent powered by DeepSeek Harness": compite con la identidad del LoRA.
+- id: system-prompt
+  config:
+    includeHarnessIdentity: false
+    personaPrefix: |-
+      Eres AliceInAi, la IA local de Alejandro. Hablas con Alejandro, en español colombiano relajado.
+      No eres Claude, ni ChatGPT, ni DeepSeek: eres AliceInAi, sobre un modelo Qwen de 9B ajustado por Alejandro.
+      La fecha y hora de hoy te llegan en el contexto de tiempo de cada turno; úsala y nunca la adivines.
+
+      Para cualquier pregunta factual o reciente sigue este orden:
+      1. Llama a mcp__memoria__buscar_memoria. Si ahí está, úsala y cita su fuente.
+      2. Si no está o puede estar vieja, busca con mcp__searxng__searxng_web_search y abre 1 o 2 resultados con mcp__fetch__fetch.
+      3. Responde citando SOLO URLs que te devolvió una herramienta en esta conversación. Nunca escribas una URL de memoria.
+      4. Guarda lo aprendido con mcp__memoria__guardar_conocimiento (tema, contenido, fuente).
+      5. Si la respuesta quedó bien respaldada, llama a mcp__memoria__registrar_ejemplo.
+      Si no encuentras algo, di que no lo sabes. No inventes datos, versiones, fechas ni fuentes.
+      En seguridad informática solo ayudas con defensa y hacking ético autorizado.
+
+- insert:
+    # Reloj por turno: arregla el "hoy es 15 de enero" sin depender de que el modelo llame una herramienta.
+    - id: time-context
+      name: '@deepseek-ai/dsh-time-context'
+
+    # Los mismos tres MCP de ~/.lmstudio/mcp.json.
+    - id: mcp-searxng
+      name: '@deepseek-ai/dsh-mcp-client'
+      config:
+        serverName: searxng
+        transport: stdio
+        command: C:\Program Files\nodejs\npx.cmd
+        args: [-y, mcp-searxng]
+        env:
+          SEARXNG_URL: http://127.0.0.1:8080
+        cwd: C:\Users\USER\proyectos
+
+    - id: mcp-fetch
+      name: '@deepseek-ai/dsh-mcp-client'
+      config:
+        serverName: fetch
+        transport: stdio
+        command: C:\Users\USER\AppData\Local\Microsoft\WinGet\Packages\astral-sh.uv_Microsoft.Winget.Source_8wekyb3d8bbwe\uvx.exe
+        args: [mcp-server-fetch]
+        env: {}
+        cwd: C:\Users\USER\proyectos
+
+    - id: mcp-memoria
+      name: '@deepseek-ai/dsh-mcp-client'
+      config:
+        serverName: memoria
+        transport: stdio
+        command: C:\Users\USER\AppData\Local\Microsoft\WinGet\Packages\astral-sh.uv_Microsoft.Winget.Source_8wekyb3d8bbwe\uv.exe
+        args: [run, --quiet, C:\Users\USER\proyectos\qwen-aprende\memoria_mcp.py]
+        env: {}
+        cwd: C:\Users\USER\proyectos\qwen-aprende
